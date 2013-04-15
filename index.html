@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8" />
+</head>
+<body style="margin: 0">
+<canvas id="cvs" width="400" height="600" style="border:1px red solid;">
+    你的浏览器不支持canvas
+</canvas>
+
+<script type="text/javascript">
+    imgs = new Array('imgs/bark.jpg','imgs/gravel.jpg','imgs/mapbg.jpg')  ;
+    var isOnload = 0;
+    var Iobj =  new Array();
+    for(i = 0;i<imgs.length;i++)
+    {
+        Iobj.push(new Image());
+        Iobj[i].src = imgs[i];
+        Iobj[i].onload = function()
+        {
+            isOnload ++ ;
+            if(isOnload == imgs.length)
+            {
+                drawTrails();
+            }
+        }
+    }
+
+    function drawTrails()
+    {
+        cvs = document.getElementById("cvs").getContext('2d');
+        cvs.save();
+
+        cvs.translate(130, 250);
+        createCanopyPath(cvs);
+        cvs.lineWidth = 4;
+        cvs.strokeStyle = "#663300";
+        cvs.lineJoin = 'round';
+        cvs.stroke();
+
+        cvs.fillStyle = "#339900";
+        cvs.fill();
+
+        //cvs.fillStyle = "#000000";
+        //cvs.fillRect(-5, -50, 10, 50);
+        //cvs.drawImage(imgObj,-5, -50, 10, 50);
+        var trunkGradient = cvs.createLinearGradient(-5, -50, 5, -50);
+        trunkGradient.addColorStop(0,"#000000");
+        trunkGradient.addColorStop(0.5,"#996600");
+        trunkGradient.addColorStop(1, '#552200');
+        cvs.fillStyle = trunkGradient;
+        cvs.fillRect(-5, -50, 10, 50);
+
+        var canopyShadow = cvs.createLinearGradient(0, -50, 0, 0);
+        canopyShadow.addColorStop(0, 'rgba(0, 0, 0, 0.5)');
+        canopyShadow.addColorStop(0.5, 'rgba(0, 0, 0, 0.0)');
+        cvs.fillStyle = canopyShadow;
+        cvs.fillRect(-5, -50, 10, 50);
+
+        cvs.restore();
+        cvs.save();
+
+        cvs.translate(-10,350);
+        cvs.beginPath();
+        cvs.moveTo(0,0);
+        cvs.quadraticCurveTo(170, -50, 260, -190);
+        cvs.quadraticCurveTo(310, -250, 410,-250);
+        cvs.lineWidth = 20;
+        cvs.strokeStyle = cvs.createPattern(Iobj[1],'repeat') ;
+        cvs.stroke();
+        cvs.restore();
+
+    }
+    createCanopyPath = function(cvs)
+    {
+        cvs.beginPath();
+        cvs.moveTo(-25,-50);
+        cvs.lineTo(-10,-80);
+        cvs.lineTo(-20,-80);
+        cvs.lineTo(-5,-110);
+        cvs.lineTo(-15,-110);
+
+        cvs.lineTo(0,-140);
+        cvs.lineTo(15,-110);
+        cvs.lineTo(5,-110);
+        cvs.lineTo(20,-80);
+        cvs.lineTo(10,-80);
+        cvs.lineTo(25,-50);
+
+        cvs.closePath();
+    }
+
+</script>
+
+</body>
+</html>
